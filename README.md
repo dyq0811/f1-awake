@@ -2,8 +2,6 @@
 
 Formula 1, mapped to your day. APEX helps you find races that fit your timezone and sleep schedule, follow your favorite driver, and track both world championships.
 
-Created by [@dyq0811](https://github.com/dyq0811).
-
 ## Preview
 
 ![APEX dashboard showing sleep settings, the next Grand Prix, championship standings, a timezone-aware race calendar, and driver results](apex-preview.png)
@@ -60,18 +58,6 @@ An internet connection is required for F1 data, team logos, driver portraits, fo
 
 Settings are saved in browser local storage and are specific to each visitor and site origin. They are not uploaded to a user database.
 
-## Deploy
-
-Any static host can serve APEX. For [Cloudflare Pages Direct Upload](https://developers.cloudflare.com/pages/get-started/direct-upload/):
-
-1. Open **Workers & Pages** in your Cloudflare dashboard.
-2. Choose **Create application**, then the Pages **Drag and drop your files** option.
-3. Name the project and upload this folder, with `index.html` at the upload root.
-4. Select **Deploy site** or **Save and Deploy**.
-5. Open the assigned `pages.dev` URL and verify that schedules, standings, and images load.
-
-No build step or backend server is needed. Update a Direct Upload site by creating a new deployment with the updated folder. For automatic deployments from a GitHub repository, create a Git-integrated Pages project instead; a Direct Upload project cannot be switched to Git integration later.
-
 ## Project files
 
 ```text
@@ -97,7 +83,7 @@ Data is fetched when the page loads or the selected season/driver changes; stand
 
 ## Attribution and rights
 
-Copyright (c) 2026 [@dyq0811](https://github.com/dyq0811). Created by @dyq0811.
+Copyright (c) 2026. Created by [@dyq0811](https://github.com/dyq0811).
 
 Independent fan project, not affiliated with or endorsed by Formula 1 or its teams. Third-party data, photography, logos, trademarks, fonts, and libraries remain subject to their respective owners' rights and licenses. Public access to an asset does not automatically grant permission to redistribute it.
 
