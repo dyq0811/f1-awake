@@ -1,10 +1,10 @@
-# APEX / F1 on your time
+# F1 While You're Awake
 
-Formula 1, mapped to your day. APEX helps you find races that fit your timezone and sleep schedule, follow your favorite driver, and track both world championships.
+Formula 1, mapped to your day. F1 While You're Awake helps you find races that fit your timezone and sleep schedule, follow your favorite driver, and track both world championships.
 
 ## Preview
 
-![APEX dashboard showing sleep settings, the next Grand Prix, championship standings, a timezone-aware race calendar, and driver results](apex-preview.png)
+![F1 While You're Awake dashboard showing sleep settings, the next Grand Prix, championship standings, a timezone-aware race calendar, and driver results](preview.png)
 
 Preview captured on October 6, 2026. Race schedules and standings change as the season progresses.
 
@@ -66,7 +66,7 @@ f1-afterhours/
 	app.js          Data fetching, timezone logic, and interactions
 	styles.css      Base layout and responsive styles
 	modern.css      Current racing-red theme and dashboard layout
-	apex-preview.png  README preview image
+	preview.png     README preview image
 	README.md       Project documentation
 ```
 

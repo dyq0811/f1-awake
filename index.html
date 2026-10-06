@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f5f7"><meta name="description" content="Your Formula 1 calendar, on your time. Race schedules, sleep-friendly weekends, and your favorite driver's season.">
-  <title>APEX / F1 on your time</title>
+  <title>F1 While You&rsquo;re Awake</title>
   <meta name="author" content="dyq0811">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#"><span class="brand-mark"><b></b><b></b><b></b></span>APEX<span class="brand-sub">F1 ON YOUR TIME</span></a>
+    <a class="brand" href="#"><span class="brand-mark"><b></b><b></b><b></b></span><span class="brand-name">F1 While You&rsquo;re Awake</span></a>
     <nav aria-label="Main navigation"><a class="active" href="#calendar">Race calendar</a><a href="#driver">My driver</a></nav>
     <div class="season-select"><span class="status-dot"></span><label for="season">SEASON</label><select id="season"><option>2026</option><option>2025</option><option>2024</option></select></div>
   </header>
@@ -38,7 +38,7 @@
     <section id="driver" class="driver-section"><div class="section-heading"><div><div class="eyebrow"><span class="red-line"></span> IN YOUR CORNER</div><h2>One driver. Every lap.</h2></div><div class="driver-picker"><i data-lucide="heart"></i><select id="driver-select" aria-label="Favorite driver"><option value="norris">Lando Norris</option></select></div></div>
       <div class="driver-layout"><div id="driver-profile" class="driver-profile"><div class="loading">Loading your driver...</div></div><div class="driver-performance"><div class="performance-heading"><h3>Season trajectory</h3><div class="segmented compact" aria-label="Chart metric"><button data-chart="position" class="selected" aria-pressed="true">Finish position</button><button data-chart="points" aria-pressed="false">Race points</button></div></div><div id="driver-chart" class="driver-chart"></div><div class="results-heading"><button id="all-results" title="View all race results">SEASON RESULTS <i data-lucide="arrow-up-right"></i></button><span>GRID <span class="result-arrow">→</span> FINISH</span></div><div id="driver-results"></div><p class="data-note">Published race results, not live telemetry. Race points exclude sprint points.</p></div></div>
     </section>
-    <footer><a class="brand small" href="#">APEX<span class="brand-sub">A BETTER RACE-DAY ROUTINE.</span></a><a class="footer-github" href="https://github.com/dyq0811" target="_blank" rel="noopener noreferrer"><i data-lucide="github"></i>&copy; 2026 &middot; Created by @dyq0811</a><span id="data-status" role="status">Connecting to Jolpica F1...</span><span>Independent fan project. Not affiliated with Formula 1.</span></footer>
+    <footer><a class="brand small" href="#"><span class="brand-name">F1 While You&rsquo;re Awake</span></a><a class="footer-github" href="https://github.com/dyq0811" target="_blank" rel="noopener noreferrer"><i data-lucide="github"></i>&copy; 2026 &middot; Created by @dyq0811</a><span id="data-status" role="status">Connecting to Jolpica F1...</span><span>Independent fan project. Not affiliated with Formula 1.</span></footer>
   </main>
   <dialog id="race-dialog"><div class="dialog-top"><span id="dialog-kicker" class="eyebrow"></span><button id="close-dialog" class="icon-button" aria-label="Close details" title="Close details"><i data-lucide="x"></i></button></div><h2 id="dialog-title"></h2><div id="dialog-content"></div></dialog>
 </body>
