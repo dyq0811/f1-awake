@@ -213,20 +213,26 @@ nav a.active { font-weight: 600; }
 .badge.stretch { background: #f5c6ca; border: 1px dashed #d67f89; color: #8d2530; }
 .badge.sleep { background: #f0f0f4; color: #777782; }
 
-.season-strip { font-size: 9px; margin-top: 8px; padding-top: 30px; }
-.season-blocks { gap: 5px; position: relative; margin-right: 40px; }
-.season-blocks button { padding: 0; }
+.season-strip { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 30px 18px; font-size: 9px; margin-top: 16px; padding: 14px 0 20px; }
+.season-strip > div:first-child { grid-column: 1; grid-row: 1; }
+.season-strip > div:first-child span { display: inline; }
+.season-blocks { display: grid; grid-template-columns: repeat(var(--race-count, 24), minmax(0, 1fr)); grid-column: 1 / -1; grid-row: 2; gap: 5px; position: relative; margin-right: 44px; }
+.season-strip .season-blocks { width: auto; }
+.season-blocks button { padding: 0; width: 100%; }
 .season-blocks button.easy { background: var(--red); }
 .season-blocks button.stretch { background: var(--overlap-accent); border: 1px dashed #d67f89; }
 .season-blocks button.sleep { background: #dcdce3; }
 .season-progress-trail { position: absolute; top: -13px; left: 0; height: 4px; width: calc((100% - (var(--race-count) - 1) * 5px) / var(--race-count) * (var(--progress-index) + .5) + var(--progress-index) * 5px); border-radius: 2px; background: linear-gradient(90deg, transparent 0%, #c0202620 20%, #c0202680 70%, var(--red) 100%); pointer-events: none; }
 .season-current-car { position: absolute; top: -21px; left: 50%; transform: translateX(-50%); color: var(--red); line-height: 0; pointer-events: none; z-index: 1; }
 .season-current-car svg { width: 32px; height: 20px; }
-.season-finish-flag { position: absolute; right: -36px; top: -22px; width: 22px; height: 22px; pointer-events: none; }
+.season-finish { position: absolute; right: -38px; top: -25px; width: 24px; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none; }
+.season-finish-flag { position: relative; width: 22px; height: 22px; flex-shrink: 0; }
 .season-finish-flag::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 22px; background: #202025; }
 .season-finish-flag::after { content: ''; position: absolute; top: 0; left: 2px; width: 20px; height: 14px; border: 1px solid #202025; background: repeating-conic-gradient(#202025 0% 25%, #fff 25% 50%) 0 0 / 8px 8px; }
+.season-finish-cup { display: grid; place-items: center; width: 24px; height: 24px; color: #b98216; }
+.season-finish-cup svg { width: 22px; height: 22px; fill: #ffe2a0; stroke-width: 1.8; }
 .season-blocks button.current::after { content: ''; position: absolute; top: -4px; left: 50%; height: 3px; border-left: 1px solid var(--red); }
-.season-strip > span { color: var(--red); font-weight: 600; }
+.season-strip > span { grid-column: 2; grid-row: 1; justify-self: end; color: var(--red); font-weight: 600; }
 
 .driver-profile { background: #eaeaef; border-radius: 4px; }
 .driver-profile::before { background: repeating-linear-gradient(135deg, transparent, transparent 22px, #00000003 23px, #00000003 24px); }
@@ -269,7 +275,8 @@ footer { font-size: 9px; }
   .dashboard-top .rhythm { padding: 17px 20px; }
   .dashboard-top .dial-wrap { width: 155px; height: 155px; }
   .dashboard-top .rhythm-body { gap: 35px; }
-  .season-strip .season-blocks { margin-top: 18px; }
+  .season-strip { font-size: 8px; column-gap: 12px; }
+  .season-strip .season-blocks { margin-top: 0; }
   .topbar { height: auto; min-height: 96px; display: grid; grid-template-columns: 1fr auto; gap: 7px 15px; padding: 12px 5% 0; }
   .topbar .brand { grid-column: 1 / -1; font-size: 28px; }
   .topbar nav { height: 30px; justify-self: start; }

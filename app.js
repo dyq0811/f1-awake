@@ -98,7 +98,7 @@ function renderCalendar() {
     const isCurrent = race.round === currentRace?.round;
     const progressLabel = upcoming.length ? 'Current / next race' : 'Season complete';
     return `<button class="${kind}${isCurrent ? ' current' : ''}" data-round="${race.round}" ${isCurrent ? 'aria-current="step"' : ''} title="${isCurrent ? `${progressLabel} · ` : ''}Round ${race.round}: ${escapeHTML(race.raceName)} · ${labels[kind]}" aria-label="${isCurrent ? `${progressLabel}, ` : ''}Round ${race.round}, ${escapeHTML(race.raceName)}, ${labels[kind]}">${isCurrent ? raceCar : ''}</button>`;
-  }).join('')}${state.races.length ? '<span class="season-finish-flag" role="img" aria-label="Season finish" title="Season finish"></span>' : ''}`;
+  }).join('')}${state.races.length ? '<span class="season-finish"><span class="season-finish-flag" role="img" aria-label="Season finish" title="Season finish"></span><span class="season-finish-cup" role="img" aria-label="Championship trophy" title="Championship trophy"><i data-lucide="trophy" aria-hidden="true"></i></span></span>' : ''}`;
   $('#friendly-total').textContent = `${friendlyCount} / ${state.races.length} WATCH LIVE`;
   icons();
 }
