@@ -3,7 +3,8 @@ const API = 'https://api.jolpi.ca/ergast/f1/';
 const STORE = 'apex-preferences-v1';
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORE) || '{}'); } catch {}
-const state = { season: ['2026', '2025', '2024'].includes(saved.season) ? saved.season : '2026', timezone: saved.timezone || 'America/Los_Angeles', wake: saved.wake || '10:00', sleep: saved.sleep || '01:00', driver: saved.driver || 'norris', filter: 'upcoming', chart: 'position', races: [], standings: [], constructorStandings: [], results: [], source: '', driverToken: 0, seasonToken: 0 };
+const state = { season: ['2026', '2025', '2024'].includes(saved.season) ? saved.season : '2026', timezone: saved.timezone || 'America/Los_Angeles', wake: saved.wake || '08:00', sleep: saved.sleep || '23:30', driver: saved.driver || '', driverChosen: saved.driverChosen === true, filter: 'upcoming', chart: 'position', races: [], drivers: [], standings: [], constructorStandings: [], results: [], source: '', driverToken: 0, seasonToken: 0 };
+let standingsUpdatedAt = 0, refreshingStandings = false;
 const timezoneNames = { 'America/Los_Angeles': 'Pacific Time · Los Angeles', 'America/New_York': 'Eastern Time · New York', 'America/Chicago': 'Central Time · Chicago', 'America/Denver': 'Mountain Time · Denver', 'Europe/London': 'London · United Kingdom', 'Europe/Paris': 'Paris · France', 'Asia/Singapore': 'Singapore', 'Asia/Tokyo': 'Tokyo · Japan', 'Australia/Sydney': 'Sydney · Australia', 'Asia/Kolkata': 'India · Kolkata', 'UTC': 'Coordinated Universal Time' };
 const countries = { Australia: 'AU', China: 'CN', Japan: 'JP', USA: 'US', Canada: 'CA', Monaco: 'MC', Spain: 'ES', Austria: 'AT', UK: 'GB', Belgium: 'BE', Hungary: 'HU', Netherlands: 'NL', Italy: 'IT', Azerbaijan: 'AZ', Singapore: 'SG', Mexico: 'MX', Brazil: 'BR', Qatar: 'QA', UAE: 'AE', Bahrain: 'BH', 'Saudi Arabia': 'SA' };
 const tracks = {
@@ -20,7 +21,7 @@ const resultRow = (race) => { const result = race.Results[0]; return `<button cl
 const icons = () => globalThis.lucide?.createIcons();
 const escapeHTML = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const minutes = (value) => { const [hour, minute] = value.split(':').map(Number); return hour * 60 + minute; };
-const persist = () => { try { localStorage.setItem(STORE, JSON.stringify({ season: state.season, timezone: state.timezone, wake: state.wake, sleep: state.sleep, driver: state.driver })); } catch {} };
+const persist = () => { try { localStorage.setItem(STORE, JSON.stringify({ season: state.season, timezone: state.timezone, wake: state.wake, sleep: state.sleep, driver: state.driver, driverChosen: state.driverChosen })); } catch {} };
 const format = (date, options) => new Intl.DateTimeFormat('en-US', { timeZone: state.timezone, ...options }).format(date);
 const raceDate = (race) => new Date(`${race.date}T${race.time || '12:00:00Z'}`);
 const timeText = (date) => format(date, { hour: 'numeric', minute: '2-digit', hour12: true });
@@ -43,7 +44,7 @@ const flag = (country) => { const code = countries[country]; return code ? [...c
 const shortName = (race) => race.raceName.replace(' Grand Prix', '').replace('United States', 'United States').replace('São Paulo', 'São Paulo');
 const track = (race, className) => `<svg class="${className}" viewBox="0 0 210 135" aria-label="${escapeHTML(race.Circuit.circuitName)} circuit illustration" role="img"><path d="${tracks[race.Circuit.circuitId] || tracks.default}"/>${className === 'hero-track' ? `<path class="track-highlight" d="${tracks[race.Circuit.circuitId] || tracks.default}"/>` : ''}</svg>`;
 async function getData(path) {
-  const response = await fetch(`${API}${path}${path.includes('?') ? '&' : '?'}limit=100`, { signal: AbortSignal.timeout(15000) });
+  const response = await fetch(`${API}${path}${path.includes('?') ? '&' : '?'}limit=100`, { signal: AbortSignal.timeout(15000), cache: 'no-store' });
   if (!response.ok) throw new Error(`F1 feed returned ${response.status}`);
   return (await response.json()).MRData;
 }
@@ -186,6 +187,8 @@ async function loadDriver() {
 async function loadSeason() {
   const token = ++state.seasonToken, season = state.season;
   ++state.driverToken;
+  document.querySelectorAll('.driver-search-picker').forEach(closeDriverPicker);
+  document.querySelectorAll('.driver-search-input').forEach((input) => { input.disabled = true; input.value = ''; });
   state.races = []; state.standings = []; state.constructorStandings = []; state.results = [];
   $('#constructor-standings').innerHTML = '<div class="loading">Loading standings...</div>';
   $('#championship-drivers').innerHTML = '<div class="loading">Loading standings...</div>';
@@ -204,10 +207,11 @@ async function loadSeason() {
     if (!drivers.length) { try { const data = await getData(`${season}/drivers.json`); drivers = data.DriverTable.Drivers; } catch {} }
     if (token !== state.seasonToken) return;
     if (drivers.length) {
-      if (!drivers.some((driver) => driver.driverId === state.driver)) state.driver = drivers[0].driverId;
-      $('#driver-select').innerHTML = drivers.map((driver) => `<option value="${escapeHTML(driver.driverId)}">${escapeHTML(driver.givenName)} ${escapeHTML(driver.familyName)}</option>`).join('');
-      $('#driver-select').value = state.driver;
+      state.drivers = drivers;
+      if (!state.driverChosen || !drivers.some((driver) => driver.driverId === state.driver)) state.driver = pointsLeader()?.Driver.driverId || drivers[0].driverId;
+      syncDriverPickers();
     }
+    standingsUpdatedAt = Date.now();
     $('#data-status').textContent = `Jolpica F1 · Updated ${timeText(new Date())}`;
     renderSchedule(); renderChampionships(); persist(); await loadDriver();
   } catch {
@@ -296,19 +300,116 @@ $('#timezone-options').addEventListener('pointerdown', (event) => { if (event.ta
 $('#timezone-options').addEventListener('click', (event) => { const option = event.target.closest('[data-zone]'); if (option) chooseTimezone(option.dataset.zone); });
 $('.timezone-field').addEventListener('click', () => { if ($('#timezone-menu').hidden) { $('#timezone').focus(); $('#timezone-menu').hidden = false; $('#timezone').setAttribute('aria-expanded', 'true'); $('#timezone').select(); renderTimezoneOptions(); } });
 for (const name of ['wake', 'sleep']) {
-  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(state[name])) state[name] = name === 'wake' ? '10:00' : '01:00';
+  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(state[name])) state[name] = name === 'wake' ? '08:00' : '23:30';
   $(`#${name}`).value = state[name];
   $(`#${name}`).addEventListener('input', (event) => { if (!event.target.value) return; state[name] = event.target.value; persist(); renderSchedule(); });
 }
 $('#season').addEventListener('change', (event) => { state.season = event.target.value; persist(); loadSeason(); });
-$('#driver-select').addEventListener('change', (event) => { state.driver = event.target.value; persist(); renderChampionships(); loadDriver(); });
+function pointsLeader() { return state.standings.reduce((highest, standing) => !highest || Number(standing.points) > Number(highest.points) ? standing : highest, null); }
+function selectedDriverName() { const driver = state.drivers.find((item) => item.driverId === state.driver); return driver ? `${driver.givenName} ${driver.familyName}` : ''; }
+function driverPickerValue() { const name = selectedDriverName(); return name && !state.driverChosen ? `${name} · Points leader` : name; }
+function closeDriverPicker(picker) {
+  const menu = picker.querySelector('.driver-search-menu');
+  if (menu.matches(':popover-open')) menu.hidePopover();
+  menu.hidden = true;
+  const input = picker.querySelector('.driver-search-input');
+  input.setAttribute('aria-expanded', 'false'); input.removeAttribute('aria-activedescendant'); input.value = driverPickerValue();
+}
+function syncDriverPickers() {
+  document.querySelectorAll('.driver-search-picker').forEach((picker) => {
+    const input = picker.querySelector('.driver-search-input');
+    input.disabled = !state.drivers.length;
+    if (picker.querySelector('.driver-search-menu').hidden) input.value = driverPickerValue();
+  });
+}
+function chooseDriver(id) {
+  if (id === 'leader') { state.driverChosen = false; state.driver = pointsLeader()?.Driver.driverId || state.drivers[0]?.driverId || ''; }
+  else { if (!state.drivers.some((driver) => driver.driverId === id)) return; state.driver = id; state.driverChosen = true; }
+  document.querySelectorAll('.driver-search-picker').forEach(closeDriverPicker);
+  syncDriverPickers(); persist(); renderChampionships(); loadDriver();
+}
+document.querySelectorAll('.driver-search-picker').forEach((picker) => {
+  const input = picker.querySelector('.driver-search-input'), menu = picker.querySelector('.driver-search-menu'), list = picker.querySelector('[role="listbox"]');
+  let matches = [], activeIndex = -1;
+  function renderOptions(query = '') {
+    const terms = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().split(/\s+/).filter(Boolean);
+    const driverChoices = state.drivers.map((driver) => { const standing = state.standings.find((item) => item.Driver.driverId === driver.driverId); return { id: driver.driverId, name: `${driver.givenName} ${driver.familyName}`, detail: `${standing?.Constructors?.[0]?.name || driver.nationality}${standing ? ` · ${standing.points} pts` : ''}`, code: driver.code || '' }; });
+    const choices = [{ id: 'leader', name: 'Follow points leader', detail: pointsLeader() ? `${selectedLeaderName()} · Automatic` : 'Automatic when standings are available', code: 'default auto' }, ...driverChoices];
+    matches = choices.filter((choice) => { const text = `${choice.name} ${choice.detail} ${choice.code}`.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); return terms.every((term) => text.includes(term)); });
+    activeIndex = -1; input.removeAttribute('aria-activedescendant');
+    list.innerHTML = matches.map((choice, index) => `<li id="${input.id}-option-${index}" role="option" data-driver="${escapeHTML(choice.id)}" aria-selected="${choice.id === 'leader' ? !state.driverChosen : state.driverChosen && choice.id === state.driver}"><span>${escapeHTML(choice.name)}</span><small>${escapeHTML(choice.detail)}</small></li>`).join('');
+    picker.querySelector('.driver-search-status').textContent = matches.length ? `${matches.length} choices` : 'No matching drivers';
+  }
+  function positionMenu() {
+    if (menu.hidden) return;
+    const viewport = window.visualViewport;
+    const viewportLeft = viewport?.offsetLeft || 0, viewportTop = viewport?.offsetTop || 0;
+    const viewportWidth = viewport?.width || window.innerWidth, viewportHeight = viewport?.height || window.innerHeight;
+    const anchor = picker.querySelector('.driver-search-field').getBoundingClientRect();
+    const width = Math.min(Math.max(anchor.width, 280), viewportWidth - 24);
+    menu.style.width = `${width}px`;
+    menu.style.left = `${Math.max(viewportLeft + 12, Math.min(anchor.left, viewportLeft + viewportWidth - width - 12))}px`;
+    const above = anchor.top - viewportTop - 12, below = viewportTop + viewportHeight - anchor.bottom - 12;
+    const opensAbove = below < 292 && above > below;
+    const available = Math.max(0, (opensAbove ? above : below) - 6);
+    const footerHeight = picker.querySelector('.driver-search-status').getBoundingClientRect().height;
+    list.style.maxHeight = `${Math.max(0, Math.min(260, available - footerHeight - 2))}px`;
+    const height = menu.getBoundingClientRect().height;
+    menu.style.top = `${Math.max(viewportTop + 12, Math.min(opensAbove ? anchor.top - height - 6 : anchor.bottom + 6, viewportTop + viewportHeight - height - 12))}px`;
+  }
+  function open() {
+    if (input.disabled) return;
+    menu.hidden = false; if (!menu.matches(':popover-open')) menu.showPopover();
+    input.setAttribute('aria-expanded', 'true'); input.select(); renderOptions(); positionMenu();
+  }
+  input.addEventListener('focus', open);
+  input.addEventListener('click', () => { if (menu.hidden) open(); });
+  input.addEventListener('input', () => { menu.hidden = false; if (!menu.matches(':popover-open')) menu.showPopover(); input.setAttribute('aria-expanded', 'true'); renderOptions(input.value); positionMenu(); });
+  input.addEventListener('blur', () => closeDriverPicker(picker));
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' || event.key === 'Tab') { closeDriverPicker(picker); return; }
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault(); if (menu.hidden) open(); if (!matches.length) return;
+      activeIndex = event.key === 'ArrowDown' ? (activeIndex + 1) % matches.length : activeIndex <= 0 ? matches.length - 1 : activeIndex - 1;
+      list.querySelectorAll('[role="option"]').forEach((option, index) => option.classList.toggle('highlighted', index === activeIndex));
+      const option = list.children[activeIndex]; input.setAttribute('aria-activedescendant', option.id); option.scrollIntoView({ block: 'nearest' });
+    }
+    if (event.key === 'Enter' && !menu.hidden) { event.preventDefault(); if (activeIndex >= 0) chooseDriver(matches[activeIndex].id); else if (matches.length === 1) chooseDriver(matches[0].id); }
+  });
+  list.addEventListener('pointerdown', (event) => { if (event.target.closest('[data-driver]')) event.preventDefault(); });
+  list.addEventListener('click', (event) => { const option = event.target.closest('[data-driver]'); if (option) chooseDriver(option.dataset.driver); });
+  window.addEventListener('resize', positionMenu);
+  window.addEventListener('scroll', positionMenu, true);
+  window.visualViewport?.addEventListener('resize', positionMenu);
+  window.visualViewport?.addEventListener('scroll', positionMenu);
+});
+function selectedLeaderName() { const driver = pointsLeader()?.Driver; return driver ? `${driver.givenName} ${driver.familyName}` : ''; }
+async function refreshStandings() {
+  if (refreshingStandings || document.hidden || !state.races.length) return;
+  const season = state.season, token = state.seasonToken;
+  refreshingStandings = true;
+  try {
+    const [drivers, constructors] = await Promise.all([getData(`${season}/driverStandings.json`), getData(`${season}/constructorStandings.json`).catch(() => null)]);
+    if (token !== state.seasonToken || season !== state.season) return;
+    const standings = drivers.StandingsTable.StandingsLists[0]?.DriverStandings;
+    if (!standings?.length) return;
+    state.standings = standings; state.drivers = standings.map((standing) => standing.Driver);
+    const teams = constructors?.StandingsTable.StandingsLists[0]?.ConstructorStandings;
+    if (teams) state.constructorStandings = teams;
+    if (!state.driverChosen) state.driver = pointsLeader().Driver.driverId;
+    standingsUpdatedAt = Date.now(); syncDriverPickers(); persist(); renderChampionships(); await loadDriver();
+    $('#data-status').textContent = `Jolpica F1 · Updated ${timeText(new Date())}`;
+  } catch {} finally { refreshingStandings = false; }
+}
+setInterval(refreshStandings, 5 * 60 * 1000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - standingsUpdatedAt >= 5 * 60 * 1000) refreshStandings(); });
 document.querySelectorAll('[data-standings]').forEach((button) => button.addEventListener('click', () => showStandings(button.dataset.standings)));
 document.addEventListener('error', (event) => {
   if (event.target.matches?.('.team-logo img')) { event.target.hidden = true; event.target.nextElementSibling.hidden = false; }
 }, true);
 $('#all-results').addEventListener('click', () => {
   $('#dialog-kicker').textContent = `DRIVER RESULTS / ${state.season}`;
-  $('#dialog-title').textContent = $('#driver-select').selectedOptions[0]?.textContent || 'Season results';
+  $('#dialog-title').textContent = selectedDriverName() || 'Season results';
   $('#dialog-content').innerHTML = `<p class="dialog-note">Grand Prix results · Race points exclude sprint points</p>${state.results.length ? state.results.slice().reverse().map(resultRow).join('') : '<div class="empty">No published results available.</div>'}`;
   $('#race-dialog').showModal(); icons();
 });

@@ -34,7 +34,7 @@ nav a.active { font-weight: 600; }
 .local-clock strong { font-size: 27px; }
 .status-dot, .tiny-dot { background: var(--red); }
 
-.dashboard-top { grid-template-columns: minmax(300px, 1.1fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: 280px 230px; grid-template-areas: "rhythm drivers constructors" "race drivers constructors"; gap: 18px; }
+.dashboard-top { grid-template-columns: minmax(300px, 1.1fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: 350px 230px; grid-template-areas: "rhythm drivers constructors" "race drivers constructors"; gap: 18px; }
 .dashboard-top .next-race { grid-area: race; min-height: 230px; padding: 22px; }
 .dashboard-top .next-race .kicker { justify-content: space-between; font-size: 9px; }
 .dashboard-top .next-race h2 { font-size: 32px; line-height: 1.1; max-width: 100%; margin: 14px 0; }
@@ -42,6 +42,7 @@ nav a.active { font-weight: 600; }
 .dashboard-top .next-recommend { max-width: none; }
 .dashboard-top .next-time strong { font-size: 30px; }
 .dashboard-top .rhythm { grid-area: rhythm; padding: 17px; }
+.dashboard-top .rhythm .section-kicker { margin-bottom: 10px; }
 .dashboard-top .dial-wrap { width: 132px; height: 132px; }
 .dashboard-top .rhythm-body { gap: 10px; justify-content: space-around; }
 .championship-board { padding: 12px 15px; background: #fff; border-top: 2px solid var(--ink); min-width: 0; flex: 1; }
@@ -120,6 +121,24 @@ nav a.active { font-weight: 600; }
 .dial-center svg { color: var(--red); }
 .dial-center strong { font-weight: 700; }
 .rhythm-bottom { font-size: 10px; }
+.rhythm-driver { margin-top: 12px; }
+.rhythm-driver > .field-label { color: var(--red); font-weight: 600; }
+.driver-search-picker { position: relative; }
+.driver-search-field { display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0; }
+.rhythm-driver .driver-search-field { margin-top: 6px; padding: 10px; background: #fff4f4; border: 1px solid #dc969a; border-radius: 4px; }
+.driver-search-field > svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--red); }
+.driver-search-input { width: 100%; min-width: 0; padding: 2px 0; border: 0; background: transparent; font-size: 12px; text-overflow: ellipsis; }
+.driver-search-input:disabled { color: var(--muted); cursor: wait; }
+.driver-section .driver-picker { width: 260px; max-width: 45%; }
+.driver-search-menu { position: fixed; inset: auto; margin: 0; z-index: 25; background: #fff; border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 12px 28px #15151818; }
+.driver-search-menu[hidden] { display: none; }
+.driver-search-menu ul { list-style: none; padding: 4px; margin: 0; max-height: 260px; overflow-y: auto; overscroll-behavior: contain; }
+.driver-search-menu li { display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 3px; cursor: pointer; }
+.driver-search-menu li:hover, .driver-search-menu li.highlighted, .driver-search-menu li[aria-selected="true"] { background: #fff0f0; }
+.driver-search-menu li > span { font-size: 12px; color: var(--ink); overflow-wrap: anywhere; }
+.driver-search-menu li[aria-selected="true"] > span { color: var(--red); font-weight: 600; }
+.driver-search-menu li small { font: 9px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.driver-search-status { padding: 9px 12px; border-top: 1px solid var(--line); font: 9px var(--mono); color: var(--muted); }
 #sleep-dial > circle:first-child { stroke: #e9e9ee; }
 #sleep-dial > circle:nth-child(2) { stroke: var(--red); }
 #sleep-dial > circle:nth-child(n+3) { stroke: var(--red); fill: #fff; }
