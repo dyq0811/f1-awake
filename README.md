@@ -32,17 +32,9 @@ Preview captured on October 6, 2026. Race schedules and standings change as the 
 
 Grand Prix estimates use a two-hour window. Actual races can last longer because of delays or red flags. Weekend sessions use their usual scheduled duration. Unconfirmed start times are shown as **Time TBC** rather than being classified as confirmed watchable races.
 
-## Run locally
+## Visit
 
-This is a static HTML, CSS, and JavaScript application. No Node.js, package installation, build command, or API key is required.
-
-From the project folder, with Python 3 installed:
-
-```sh
-python3 -m http.server 8001 --bind 127.0.0.1
-```
-
-Open **http://127.0.0.1:8001** in a modern browser. Stop the server with **Ctrl+C**. Choose another port if 8001 is already in use.
+Visit **[f1-awake.0811dingy.workers.dev](https://f1-awake.0811dingy.workers.dev)** in your browser.
 
 An internet connection is required for F1 data, team logos, driver portraits, fonts, and icons.
 
