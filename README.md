@@ -1,12 +1,14 @@
 # F1 While You're Awake
 
+By [@dyq0811](https://github.com/dyq0811)
+
 Formula 1, mapped to your day. F1 While You're Awake helps you find races that fit your timezone and sleep schedule, follow your favorite driver, and track both world championships.
 
 Visit **[f1-awake.0811dingy.workers.dev](https://f1-awake.0811dingy.workers.dev)** in your browser.
 
 ## Why I built this
 
-F1's timezone switch is handy, but it doesn't know I'm a night owl. I still had to check every race to answer the real question: **will I actually be awake for this?** I'm here for lights out, not a 4am alarm.
+F1's timezone switch is handy, but it doesn't know I'm a night owl. I still had to check every race to answer the real question: **will I actually be awake for this?** I'm here for lights out, not a 5am alarm.
 
 I'm also more driver-loyal than team-loyal. My favorites can change garages; I'm still cheering for them. So I built a race calendar around my sleep schedule, with a driver view that follows the person, not the paint job.
 
@@ -76,7 +78,7 @@ Championship totals include sprint points. Grand Prix results and the race-point
 
 ## Attribution and rights
 
-Copyright (c) 2026. Created by [@dyq0811](https://github.com/dyq0811).
+Copyright (c) 2026.
 
 Independent fan project, not affiliated with or endorsed by Formula 1 or its teams. Third-party data, photography, logos, trademarks, fonts, and libraries remain subject to their respective owners' rights and licenses. Public access to an asset does not automatically grant permission to redistribute it.
 
