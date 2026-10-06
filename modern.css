@@ -1,7 +1,7 @@
 :root {
   --paper: #f5f5f7;
   --ink: #151518;
-  --muted: #717178;
+  --muted: #5d5d68;
   --line: #dedee3;
   --red: #c02026;
   --overlap: #fbe3e5;
@@ -24,17 +24,19 @@ body {
 nav a { font-size: 13px; }
 nav a.active { font-weight: 600; }
 .topbar .brand { font-size: 30px; }
+.brand-race-car { display: inline-flex; align-items: center; width: 56px; height: 32px; flex-shrink: 0; color: var(--red); }
+.brand-race-car svg { display: block; width: 56px; height: 32px; }
 .brand-name { font-style: normal; white-space: nowrap; }
 .brand-sub { font-size: 10px; }
 .eyebrow { font-size: 10px; }
 .page-heading { padding-top: 36px; }
 .page-heading h1 { font-weight: 700; }
-.page-heading h1 span { color: #85858d; }
+.page-heading h1 span { color: #707078; }
 .page-heading p { font-size: 13px; }
 .local-clock strong { font-size: 27px; }
 .status-dot, .tiny-dot { background: var(--red); }
 
-.dashboard-top { grid-template-columns: minmax(300px, 1.1fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: 350px 230px; grid-template-areas: "rhythm drivers constructors" "race drivers constructors"; gap: 18px; }
+.dashboard-top { grid-template-columns: minmax(300px, 1.1fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: 380px 230px; grid-template-areas: "rhythm drivers constructors" "race drivers constructors"; gap: 18px; }
 .dashboard-top .next-race { grid-area: race; min-height: 230px; padding: 22px; }
 .dashboard-top .next-race .kicker { justify-content: space-between; font-size: 9px; }
 .dashboard-top .next-race h2 { font-size: 32px; line-height: 1.1; max-width: 100%; margin: 14px 0; }
@@ -43,7 +45,7 @@ nav a.active { font-weight: 600; }
 .dashboard-top .next-time strong { font-size: 30px; }
 .dashboard-top .rhythm { grid-area: rhythm; padding: 17px; }
 .dashboard-top .rhythm .section-kicker { margin-bottom: 10px; }
-.dashboard-top .dial-wrap { width: 132px; height: 132px; }
+.dashboard-top .dial-wrap { width: 132px; height: auto; aspect-ratio: 1; flex-shrink: 1; }
 .dashboard-top .rhythm-body { gap: 10px; justify-content: space-around; }
 .championship-board { padding: 12px 15px; background: #fff; border-top: 2px solid var(--ink); min-width: 0; flex: 1; }
 .dashboard-top > .championship-board { display: flex; flex-direction: column; min-height: 0; }
@@ -55,7 +57,7 @@ nav a.active { font-weight: 600; }
 .championship-heading h2 { font: 600 19px var(--display); margin: 0; }
 .championship-heading .icon-button { width: 24px; height: 24px; flex-shrink: 0; }
 .championship-heading .icon-button svg { width: 14px; height: 14px; }
-.standing-columns { display: flex; justify-content: space-between; font: 8px var(--mono); color: #52525e; margin: 5px 0 3px; }
+.standing-columns { display: flex; justify-content: space-between; font: 10px var(--mono); color: #52525e; margin: 5px 0 6px; }
 .standing-scroll { height: 120px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #72727e #ededf1; padding-right: 7px; }
 .standing-scroll:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 .standing-row { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; gap: 7px; position: relative; min-height: 30px; padding: 6px 0; color: var(--ink); border-bottom: 1px solid #ededf1; }
@@ -71,7 +73,7 @@ nav a.active { font-weight: 600; }
 .standing-name svg { width: 10px; height: 10px; flex-shrink: 0; color: var(--red); fill: var(--red); }
 .standing-points { font: 500 12px var(--mono); color: var(--ink); }
 .standing-row.followed .standing-name, .standing-row.followed .standing-position { color: var(--red); }
-.standing-season { font: 8px var(--mono); color: #52525e; margin-top: 8px; }
+.standing-season { font: 10px var(--mono); color: #52525e; margin-top: 10px; }
 .standings-empty { font-size: 11px; padding: 12px 0; }
 .championship-board .loading { padding: 15px 0; font-size: 11px; }
 .full-standings .standing-row { min-height: 35px; }
@@ -102,37 +104,40 @@ nav a.active { font-weight: 600; }
 }
 
 .section-kicker { font-size: 11px; }
-.field-label { font-size: 9px; }
-.timezone-field { padding-bottom: 12px; }
+.field-label { font-size: 11px; font-weight: 500; color: #52525e; }
+.timezone-field { min-height: 44px; margin-top: 7px; padding: 10px; border: 1px solid #b8b8c4; border-radius: 4px; background: #f6f6f8; cursor: text; }
+.timezone-field:hover { background: #fff; border-color: var(--red); }
+.timezone-field:focus-within { background: #fff; border-color: var(--red); box-shadow: 0 0 0 2px #c0202618; }
 .timezone-picker { position: relative; }
-.timezone-field input { width: 100%; min-width: 0; border: 0; background: transparent; padding: 2px 0; font-size: 12px; text-overflow: ellipsis; }
-.timezone-field > svg { flex-shrink: 0; }
+.timezone-field input { width: 100%; min-width: 0; border: 0; background: transparent; padding: 2px 0; font-size: 14px; font-weight: 500; color: var(--ink); text-overflow: ellipsis; }
+.timezone-field input:focus-visible { outline: 0; }
+.timezone-field > svg { flex-shrink: 0; width: 17px; height: 17px; color: var(--red); }
 .timezone-menu { position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 20; background: #fff; border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 12px 28px #15151818; }
 .timezone-menu[hidden] { display: none; }
 #timezone-options { list-style: none; padding: 4px; margin: 0; max-height: 280px; overflow-y: auto; overscroll-behavior: contain; }
 #timezone-options li { position: relative; display: flex; flex-direction: column; gap: 3px; padding: 10px 26px 10px 9px; border-radius: 3px; cursor: pointer; }
 #timezone-options li:hover, #timezone-options li.highlighted { background: #fff0f0; }
 #timezone-options li[aria-selected="true"] > span { color: var(--red); }
-#timezone-options li > span { font-size: 11px; overflow-wrap: anywhere; }
-#timezone-options li small { font: 9px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+#timezone-options li > span { font-size: 13px; overflow-wrap: anywhere; }
+#timezone-options li small { font: 11px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
 #timezone-options li svg { position: absolute; right: 8px; top: 13px; width: 12px; height: 12px; color: var(--red); }
-.timezone-search-status { padding: 9px 12px; border-top: 1px solid var(--line); font: 9px var(--mono); color: var(--muted); }
-.sleep-inputs { flex: 1; max-width: 148px; min-width: 0; gap: 14px; }
-.sleep-inputs label > span { font-size: 9px; margin-bottom: 6px; color: #52525e; }
+.timezone-search-status { padding: 9px 12px; border-top: 1px solid var(--line); font: 11px var(--mono); color: var(--muted); }
+.sleep-inputs { flex: 1; max-width: 148px; min-width: 140px; gap: 14px; }
+.sleep-inputs label > span { font-size: 10px; margin-bottom: 6px; color: #52525e; }
 .sleep-inputs .edit-time-icon { margin-left: auto; color: var(--red); }
 .sleep-inputs input { display: block; width: 100%; height: 40px; padding: 8px; background: #f6f6f8; border: 1px solid #b8b8c4; border-radius: 4px; font-size: 15px; cursor: text; }
 .sleep-inputs input:hover { border-color: var(--red); background: #fff; }
 .sleep-inputs input:focus, .sleep-inputs label:focus-within input { border-color: var(--red); background: #fff; box-shadow: 0 0 0 2px #c0202618; outline: 0; }
 .dial-center svg { color: var(--red); }
 .dial-center strong { font-weight: 700; }
-.rhythm-bottom { font-size: 10px; }
+.rhythm-bottom { font-size: 11px; }
 .rhythm-driver { margin-top: 12px; }
 .rhythm-driver > .field-label { color: var(--red); font-weight: 600; }
 .driver-search-picker { position: relative; }
 .driver-search-field { display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0; }
 .rhythm-driver .driver-search-field { margin-top: 6px; padding: 10px; background: #fff4f4; border: 1px solid #dc969a; border-radius: 4px; }
 .driver-search-field > svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--red); }
-.driver-search-input { width: 100%; min-width: 0; padding: 2px 0; border: 0; background: transparent; font-size: 12px; text-overflow: ellipsis; }
+.driver-search-input { width: 100%; min-width: 0; padding: 2px 0; border: 0; background: transparent; font-size: 14px; text-overflow: ellipsis; }
 .driver-search-input:disabled { color: var(--muted); cursor: wait; }
 .driver-section .driver-picker { width: 260px; max-width: 45%; }
 .driver-search-menu { position: fixed; inset: auto; margin: 0; z-index: 25; background: #fff; border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 12px 28px #15151818; }
@@ -284,12 +289,13 @@ footer { font-size: 9px; }
   .standing-name { font-size: 12px; }
   .standing-points { font-size: 12px; }
   .dashboard-top .rhythm { padding: 17px 20px; }
-  .dashboard-top .dial-wrap { width: 155px; height: 155px; }
-  .dashboard-top .rhythm-body { gap: 35px; }
+  .dashboard-top .dial-wrap { width: 132px; height: auto; }
+  .dashboard-top .rhythm-body { gap: 12px; }
   .season-strip { font-size: 8px; column-gap: 12px; }
   .season-strip .season-blocks { margin-top: 0; }
   .topbar { height: auto; min-height: 96px; display: grid; grid-template-columns: 1fr auto; gap: 7px 15px; padding: 12px 5% 0; }
   .topbar .brand { grid-column: 1 / -1; font-size: 28px; }
+  .topbar .brand-name { font-size: 26px; }
   .topbar nav { height: 30px; justify-self: start; }
   .topbar .season-select { justify-self: end; align-self: center; }
   nav a { font-size: 10px; }
