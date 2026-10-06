@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f5f7"><meta name="description" content="Your Formula 1 calendar, on your time. Race schedules, sleep-friendly weekends, and your favorite driver's season.">
+  <title>APEX / F1 on your time</title>
+  <meta name="author" content="dyq0811">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="modern.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="app.js" type="module"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark"><b></b><b></b><b></b></span>APEX<span class="brand-sub">F1 ON YOUR TIME</span></a>
+    <nav aria-label="Main navigation"><a class="active" href="#calendar">Race calendar</a><a href="#driver">My driver</a></nav>
+    <div class="season-select"><span class="status-dot"></span><label for="season">SEASON</label><select id="season"><option>2026</option><option>2025</option><option>2024</option></select></div>
+  </header>
+  <main>
+    <section class="page-heading"><div><div class="eyebrow"><span class="red-line"></span> THE WORLD MOVES FAST. KEEP YOUR RHYTHM.</div><h1>Race day. <span>Your time.</span></h1><p>All the racing. None of the 4am surprises.</p></div><div class="local-clock"><span id="today"></span><strong id="clock">--:--</strong><span id="clock-zone">PACIFIC TIME</span></div></section>
+    <section class="dashboard-top">
+      <aside class="rhythm"><div class="section-kicker"><span><i data-lucide="sun-moon"></i> YOUR DAILY RHYTHM</span><span class="tiny-dot"></span></div>
+        <div class="timezone-picker"><label class="field-label" for="timezone">YOUR TIMEZONE</label><div class="timezone-field"><i data-lucide="globe-2"></i><input id="timezone" type="text" role="combobox" aria-label="Timezone" aria-autocomplete="list" aria-expanded="false" aria-controls="timezone-options" autocomplete="off" spellcheck="false" placeholder="Search city or timezone"><i data-lucide="chevron-down"></i></div><div id="timezone-menu" class="timezone-menu" hidden><ul id="timezone-options" role="listbox" aria-label="Timezones"></ul><div id="timezone-search-status" class="timezone-search-status" role="status"></div></div></div>
+        <div class="rhythm-body"><div class="dial-wrap"><svg id="sleep-dial" viewBox="0 0 200 200" role="img" aria-label="24-hour waking and sleep schedule"></svg><div class="dial-center"><i data-lucide="sun"></i><strong id="awake-hours">15h</strong><span>awake</span></div></div><div class="sleep-inputs"><label for="wake"><span><i data-lucide="sunrise"></i> WAKE UP</span><input id="wake" type="time" value="10:00" required></label><label for="sleep"><span><i data-lucide="moon"></i> WIND DOWN</span><input id="sleep" type="time" value="01:00" required></label></div></div>
+        <div class="rhythm-bottom"><span class="legend-dot awake"></span> Awake <span class="legend-dot asleep"></span> Asleep <span id="sleep-hours">9h of rest</span></div><p class="schedule-error" id="schedule-error" role="status"></p>
+      </aside>
+      <div class="next-race" id="next-race"><div class="loading">Finding your next lights out...</div></div>
+      <section class="championship-board drivers-board" aria-labelledby="drivers-title"><div class="championship-heading"><h2 id="drivers-title">Drivers' Championship</h2><button class="icon-button" data-standings="drivers" title="Full drivers' standings" aria-label="View full drivers' standings"><i data-lucide="arrow-up-right"></i></button></div><div id="championship-drivers"><div class="loading">Loading standings...</div></div></section>
+      <section class="championship-board constructors-board" aria-labelledby="constructors-title"><div class="championship-heading"><h2 id="constructors-title">Constructors' Championship</h2><button class="icon-button" data-standings="constructors" title="Full constructors' standings" aria-label="View full constructors' standings"><i data-lucide="arrow-up-right"></i></button></div><div id="constructor-standings"><div class="loading">Loading standings...</div></div></section>
+    </section>
+    <section id="calendar" class="calendar-section"><div class="section-heading"><div><h2>Your race calendar <span id="race-count"></span></h2><p id="calendar-subtitle">A season of racing, mapped to your day.</p></div><div class="segmented" role="group" aria-label="Calendar filter"><button class="selected" data-filter="upcoming" aria-pressed="true">Upcoming</button><button data-filter="friendly" aria-pressed="false"><span class="legend-dot awake"></span> Sleep-friendly</button><button data-filter="all" aria-pressed="false">Full season</button></div></div>
+      <div class="season-strip"><div><i data-lucide="flag"></i><span>YOUR SEASON AT A GLANCE</span></div><div class="season-blocks" id="season-blocks"></div><span id="friendly-total"></span></div>
+      <div class="calendar-legend"><span><b class="legend-dot awake"></b> Watch live</span><span><b class="legend-dot stretch"></b> Sleep overlap</span><span><b class="legend-dot asleep"></b> Sleep time</span><small>Based on a 2-hour race window</small></div>
+      <div class="race-grid" id="race-grid" aria-live="polite"><div class="loading">Loading the grid...</div></div>
+    </section>
+    <section id="driver" class="driver-section"><div class="section-heading"><div><div class="eyebrow"><span class="red-line"></span> IN YOUR CORNER</div><h2>One driver. Every lap.</h2></div><div class="driver-picker"><i data-lucide="heart"></i><select id="driver-select" aria-label="Favorite driver"><option value="norris">Lando Norris</option></select></div></div>
+      <div class="driver-layout"><div id="driver-profile" class="driver-profile"><div class="loading">Loading your driver...</div></div><div class="driver-performance"><div class="performance-heading"><h3>Season trajectory</h3><div class="segmented compact" aria-label="Chart metric"><button data-chart="position" class="selected" aria-pressed="true">Finish position</button><button data-chart="points" aria-pressed="false">Race points</button></div></div><div id="driver-chart" class="driver-chart"></div><div class="results-heading"><button id="all-results" title="View all race results">SEASON RESULTS <i data-lucide="arrow-up-right"></i></button><span>GRID <span class="result-arrow">→</span> FINISH</span></div><div id="driver-results"></div><p class="data-note">Published race results, not live telemetry. Race points exclude sprint points.</p></div></div>
+    </section>
+    <footer><a class="brand small" href="#">APEX<span class="brand-sub">A BETTER RACE-DAY ROUTINE.</span></a><a class="footer-github" href="https://github.com/dyq0811" target="_blank" rel="noopener noreferrer"><i data-lucide="github"></i>&copy; 2026 &middot; Created by @dyq0811</a><span id="data-status" role="status">Connecting to Jolpica F1...</span><span>Independent fan project. Not affiliated with Formula 1.</span></footer>
+  </main>
+  <dialog id="race-dialog"><div class="dialog-top"><span id="dialog-kicker" class="eyebrow"></span><button id="close-dialog" class="icon-button" aria-label="Close details" title="Close details"><i data-lucide="x"></i></button></div><h2 id="dialog-title"></h2><div id="dialog-content"></div></dialog>
+</body>
+</html>
