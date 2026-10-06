@@ -35,12 +35,11 @@ nav a.active { font-weight: 600; }
 .status-dot, .tiny-dot { background: var(--red); }
 
 .dashboard-top { grid-template-columns: minmax(300px, 1.1fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: 280px 230px; grid-template-areas: "rhythm drivers constructors" "race drivers constructors"; gap: 18px; }
-.dashboard-top .next-race { grid-area: race; min-height: 230px; padding: 18px; }
-.dashboard-top .next-race h2 { font-size: 34px; max-width: 64%; margin: 12px 0 7px; }
-.dashboard-top .next-bottom { margin-top: 8px; padding-top: 8px; }
-.dashboard-top .next-recommend p { font-size: 9px; line-height: 1.3; margin-top: 5px; }
-.dashboard-top .hero-track { width: 31%; height: 85px; top: 47px; right: 3%; }
-.dashboard-top .track-name { width: 32%; right: 3%; top: 130px; font-size: 7px; text-align: center; }
+.dashboard-top .next-race { grid-area: race; min-height: 230px; padding: 22px; }
+.dashboard-top .next-race .kicker { justify-content: space-between; font-size: 9px; }
+.dashboard-top .next-race h2 { font-size: 32px; line-height: 1.1; max-width: 100%; margin: 14px 0; }
+.dashboard-top .next-bottom { margin-top: 0; padding-top: 14px; align-items: center; }
+.dashboard-top .next-recommend { max-width: none; }
 .dashboard-top .next-time strong { font-size: 30px; }
 .dashboard-top .rhythm { grid-area: rhythm; padding: 17px; }
 .dashboard-top .dial-wrap { width: 132px; height: 132px; }
@@ -196,7 +195,7 @@ nav a.active { font-weight: 600; }
 .badge.sleep { background: #f0f0f4; color: #777782; }
 
 .season-strip { font-size: 9px; margin-top: 8px; padding-top: 30px; }
-.season-blocks { gap: 5px; position: relative; }
+.season-blocks { gap: 5px; position: relative; margin-right: 40px; }
 .season-blocks button { padding: 0; }
 .season-blocks button.easy { background: var(--red); }
 .season-blocks button.stretch { background: var(--overlap-accent); border: 1px dashed #d67f89; }
@@ -204,6 +203,9 @@ nav a.active { font-weight: 600; }
 .season-progress-trail { position: absolute; top: -13px; left: 0; height: 4px; width: calc((100% - (var(--race-count) - 1) * 5px) / var(--race-count) * (var(--progress-index) + .5) + var(--progress-index) * 5px); border-radius: 2px; background: linear-gradient(90deg, transparent 0%, #c0202620 20%, #c0202680 70%, var(--red) 100%); pointer-events: none; }
 .season-current-car { position: absolute; top: -21px; left: 50%; transform: translateX(-50%); color: var(--red); line-height: 0; pointer-events: none; z-index: 1; }
 .season-current-car svg { width: 32px; height: 20px; }
+.season-finish-flag { position: absolute; right: -36px; top: -22px; width: 22px; height: 22px; pointer-events: none; }
+.season-finish-flag::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 22px; background: #202025; }
+.season-finish-flag::after { content: ''; position: absolute; top: 0; left: 2px; width: 20px; height: 14px; border: 1px solid #202025; background: repeating-conic-gradient(#202025 0% 25%, #fff 25% 50%) 0 0 / 8px 8px; }
 .season-blocks button.current::after { content: ''; position: absolute; top: -4px; left: 50%; height: 3px; border-left: 1px solid var(--red); }
 .season-strip > span { color: var(--red); font-weight: 600; }
 
@@ -237,9 +239,7 @@ footer { font-size: 9px; }
 
 @media (max-width: 750px) {
   .dashboard-top { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: "rhythm" "race" "drivers" "constructors"; }
-  .dashboard-top .next-race h2 { font-size: 34px; max-width: 64%; }
-  .dashboard-top .hero-track { width: 30%; height: 85px; top: 47px; }
-  .dashboard-top .track-name { top: 130px; width: 29%; }
+  .dashboard-top .next-race h2 { font-size: 32px; max-width: 100%; }
   .dashboard-top .standing-scroll { height: 180px; flex: none; }
   .championship-board { padding: 10px; }
   .championship-heading h2 { font-size: 20px; }

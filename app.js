@@ -74,8 +74,7 @@ function renderHero() {
   const next = state.races.find((race) => raceDate(race).getTime() + 120 * 60000 > Date.now());
   if (!next) { $('#next-race').innerHTML = `<div class="kicker">${state.season} SEASON</div><h2>That's a wrap.</h2><p>Explore the full season and your driver's results below.</p>`; return; }
   const date = raceDate(next), kind = next.time ? friendliness(date) : 'sleep';
-  const days = Math.max(0, Math.ceil((date - Date.now()) / 86400000));
-  $('#next-race').innerHTML = `<div><div class="kicker"><span class="legend-dot" style="background:#ee4439"></span> NEXT LIGHTS OUT <span class="live-pill">ROUND ${String(next.round).padStart(2, '0')} / ${state.races.length}</span></div><h2>${escapeHTML(shortName(next))}<br>Grand Prix</h2><div class="location"><i data-lucide="map-pin"></i>${escapeHTML(next.Circuit.Location.locality)} · ${escapeHTML(next.Circuit.Location.country)}</div></div>${track(next, 'hero-track')}<span class="track-name">${escapeHTML(next.Circuit.circuitName.toUpperCase())}</span><div class="next-bottom"><div class="next-time"><span class="date">${format(date, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()} · ${days ? `IN ${days} DAYS` : 'RACE DAY'}</span><strong>${next.time ? timeText(date) : 'Time TBC'}<small>${next.time ? zoneText(date) : ''}</small></strong></div><div class="next-recommend">${next.time ? badge(kind) : '<span class="badge sleep">Time not confirmed</span>'}<p>${kind === 'easy' ? 'Lights out fits right into your day.' : kind === 'stretch' ? 'Part of this race overlaps your sleep.' : 'A replay might be your best friend.'}</p></div></div>`;
+  $('#next-race').innerHTML = `<div class="kicker"><span>UPCOMING GP</span><span>ROUND ${String(next.round).padStart(2, '0')}</span></div><h2>${escapeHTML(next.raceName)}</h2><div class="next-bottom"><div class="next-time"><span class="date">${format(date, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase()}</span><strong>${next.time ? timeText(date) : 'Time TBC'}<small>${next.time ? zoneText(date) : ''}</small></strong></div><div class="next-recommend">${next.time ? badge(kind) : '<span class="badge sleep">Time not confirmed</span>'}</div></div>`;
 }
 function renderCalendar() {
   const upcoming = state.races.filter((race) => raceDate(race).getTime() + 120 * 60000 > Date.now());
@@ -98,7 +97,7 @@ function renderCalendar() {
     const isCurrent = race.round === currentRace?.round;
     const progressLabel = upcoming.length ? 'Current / next race' : 'Season complete';
     return `<button class="${kind}${isCurrent ? ' current' : ''}" data-round="${race.round}" ${isCurrent ? 'aria-current="step"' : ''} title="${isCurrent ? `${progressLabel} · ` : ''}Round ${race.round}: ${escapeHTML(race.raceName)} · ${labels[kind]}" aria-label="${isCurrent ? `${progressLabel}, ` : ''}Round ${race.round}, ${escapeHTML(race.raceName)}, ${labels[kind]}">${isCurrent ? raceCar : ''}</button>`;
-  }).join('')}`;
+  }).join('')}${state.races.length ? '<span class="season-finish-flag" role="img" aria-label="Season finish" title="Season finish"></span>' : ''}`;
   $('#friendly-total').textContent = `${friendlyCount} / ${state.races.length} WATCH LIVE`;
   icons();
 }
